@@ -8,7 +8,6 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import { Link as RouterLink, useLocation } from 'react-router-dom'
 import 'firebase/functions';
-import { useFirebaseApp } from 'reactfire';
 
 const useStyles = makeStyles((theme) => ({
     seeMore: {
@@ -18,20 +17,12 @@ const useStyles = makeStyles((theme) => ({
 
 
 const Users = ({ numberOfUsers = null }) => {
-    const firebase = useFirebaseApp();
-
     const classes = useStyles();
     const location = useLocation();
-    const users = [];
     const [usersList, setUsersList] = useState([]);
-    const [url, setUrl] = useState("http://localhost:5000/timetracker-cf86b/us-central1/getAllUsers");
+    const url = "http://localhost:5000/timetracker-cf86b/us-central1/getAllUsers";
 
-    const getCategories = async () => {
-        const listCategories = await firebase.functions().httpsCallable();
-        listCategories().then(result => {
-            console.log(result.data);
-        })
-    }
+
 
     useEffect(() => {
         const fetchUsers = async () => {
@@ -45,7 +36,6 @@ const Users = ({ numberOfUsers = null }) => {
             }
         };
         fetchUsers();
-        getCategories();
     }, []);
 
 
@@ -71,7 +61,7 @@ const Users = ({ numberOfUsers = null }) => {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {usersList.length == 0 ?
+                    {usersList.length === 0 ?
 
                         <TableRow>
                             <TableCell key="CircularProgress">
