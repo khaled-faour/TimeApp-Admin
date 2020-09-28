@@ -1,25 +1,46 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { SuspenseWithPerf, AuthCheck } from 'reactfire';
+import Signup from './Components/Authentication/Signup';
+import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
+import SignIn from './Components/Authentication/Signin';
+import Dashboard from './Components/Dashboard/Dashboard'
+import CustomCircularProgress from './Components/CustomCircularProgress'
+// 
 
 function App() {
+
+
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <SuspenseWithPerf
+        fallback={<CustomCircularProgress />}
+      >
+
+        <Router>
+          <Route exact path='/' >
+            <AuthCheck fallback={<SignIn />}>
+
+              <Redirect to="/dashboard" />
+
+            </AuthCheck>
+          </Route>
+          <Route exact path='/signup'>
+            <AuthCheck fallback={<Signup />}>
+              <Redirect to="/dashboard" />
+            </AuthCheck>
+          </Route>
+
+          <Route path='/dashboard/:page?'>
+            <AuthCheck fallback={<SignIn />}>
+              <Dashboard />
+            </AuthCheck>
+          </Route>
+
+        </Router>
+
+      </SuspenseWithPerf>
+    </div >
   );
 }
 
