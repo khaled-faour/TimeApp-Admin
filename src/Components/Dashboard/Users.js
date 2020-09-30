@@ -8,6 +8,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import { Link as RouterLink, useLocation } from 'react-router-dom'
 import 'firebase/functions';
+import { useFirebaseApp } from 'reactfire';
 
 const useStyles = makeStyles((theme) => ({
     seeMore: {
@@ -20,23 +21,45 @@ const Users = ({ numberOfUsers = null }) => {
     const classes = useStyles();
     const location = useLocation();
     const [usersList, setUsersList] = useState([]);
-    const url = "http://localhost:5000/timetracker-cf86b/us-central1/getAllUsers";
+    const firebase = useFirebaseApp();
+
+
 
 
 
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                const result = await fetch(url);
-                const data = await result.json();
-
-                await setUsersList(data);
-            } catch (error) {
-                console.log(`Error: ${error}`)
+                await firebase.functions().httpsCallable('getAllUsers')()
+                    .then(async response => {
+                        await setUsersList(response.data);
+                    }).catch(e => {
+                        console.log(e)
+                    });
+            } catch (e) {
+                console.log(e);
             }
         };
+        const firefunction = async () => {
+
+            try {
+                await firebase.functions().httpsCallable('getAllCategories')()
+                    .then(response => {
+                        console.log(response.data);
+                    }).catch(e => {
+                        console.log(e)
+                    });
+            } catch (e) {
+                console.log(e);
+            }
+
+        }
+
         fetchUsers();
-    }, []);
+        firefunction();
+    }, [firebase]);
+
+
 
 
 

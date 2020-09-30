@@ -21,6 +21,8 @@ import { mainListItems } from './listItems';
 import Logout from '../Authentication/Logout';
 import Users from './Users';
 import { Route, Switch } from 'react-router-dom';
+import Categories from './Categories';
+import Tasks from './Tasks'
 
 
 
@@ -164,7 +166,7 @@ const Dashboard = () => {
                     <Grid container spacing={3}>
                         <Switch>
                             <Route exact path="/dashboard">
-                                {/* Total Users Number of Users*/}
+                                {/* List Number of Users*/}
                                 <Grid item xs={12}>
                                     <Paper className={classes.paper}>
                                         <Users numberOfUsers={2} />
@@ -172,10 +174,26 @@ const Dashboard = () => {
                                 </Grid>
                             </Route>
                             <Route path="/dashboard/users">
-                                {/* List Users All Users*/}
+                                {/* List  All Users*/}
                                 <Grid item xs={12}>
                                     <Paper className={classes.paper}>
                                         <Users />
+                                    </Paper>
+                                </Grid>
+                            </Route>
+                            <Route path="/dashboard/categories">
+                                {/* List Categories */}
+                                <Grid item xs={12}>
+                                    <Paper className={classes.paper}>
+                                        <Categories />
+                                    </Paper>
+                                </Grid>
+                            </Route>
+                            <Route path="/dashboard/tasks">
+                                {/* List Tasks*/}
+                                <Grid item xs={12}>
+                                    <Paper className={classes.paper}>
+                                        <Tasks />
                                     </Paper>
                                 </Grid>
                             </Route>
