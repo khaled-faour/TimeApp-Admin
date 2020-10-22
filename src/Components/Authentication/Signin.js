@@ -10,8 +10,8 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import LinearProgress from '@material-ui/core/LinearProgress'
 import { useFirebaseApp } from 'reactfire';
-import CustomCircularProgress from '../CustomCircularProgress'
 
 
 
@@ -59,14 +59,13 @@ export default function SignIn() {
     const firebase = useFirebaseApp();
 
     // Submit function (Log in user)
-    const handleSubmit = e => {
+    const handleSubmit = async e => {
         e.preventDefault();
         //setLoading to true
         setLoading(true);
         // Log in code here.
-        firebase.auth().signInWithEmailAndPassword(user.email, user.password).then(
-            setLoading(false),
-        )
+        await firebase.auth().signInWithEmailAndPassword(user.email, user.password)
+
             .catch(error => {
                 // Update the error
                 setUser({
@@ -76,72 +75,73 @@ export default function SignIn() {
             })
     }
 
-    return (!loading ?
-        <Container component="main" maxWidth="xs">
+    return (
+        <div>
+            {loading ? <LinearProgress /> : null}
+            <Container component="main" maxWidth="xs">
 
-            <CssBaseline />
-            <div className={classes.paper}>
-                <Avatar className={classes.avatar}>
-                    <LockOutlinedIcon />
-                </Avatar>
-                <Typography component="h1" variant="h5">
-                    Sign in
-        </Typography>
-                <form onSubmit={handleSubmit} className={classes.form} >
-                    <TextField
-                        variant="outlined"
-                        margin="normal"
-                        required
-                        fullWidth
-                        id="email"
-                        label="Email Address"
-                        name="email"
-                        autoComplete="email"
-                        autoFocus
-                        onChange={handleChange}
-                    />
-                    <TextField
-                        variant="outlined"
-                        margin="normal"
-                        required
-                        fullWidth
-                        name="password"
-                        label="Password"
-                        type="password"
-                        id="password"
-                        autoComplete="current-password"
-                        onChange={handleChange}
-                    />
+                <CssBaseline />
+                <div className={classes.paper}>
+                    <Avatar className={classes.avatar}>
+                        <LockOutlinedIcon />
+                    </Avatar>
+                    <Typography component="h1" variant="h5">
+                        Sign in
+                </Typography>
+                    <form onSubmit={handleSubmit} className={classes.form} >
+                        <TextField
+                            variant="outlined"
+                            margin="normal"
+                            required
+                            fullWidth
+                            id="email"
+                            label="Email Address"
+                            name="email"
+                            autoComplete="email"
+                            autoFocus
+                            onChange={handleChange}
+                        />
+                        <TextField
+                            variant="outlined"
+                            margin="normal"
+                            required
+                            fullWidth
+                            name="password"
+                            label="Password"
+                            type="password"
+                            id="password"
+                            autoComplete="current-password"
+                            onChange={handleChange}
+                        />
 
-                    <Button
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                        color="primary"
-                        className={classes.submit}
-                    >
-                        Sign In
+                        <Button
+                            type="submit"
+                            fullWidth
+                            variant="contained"
+                            color="primary"
+                            className={classes.submit}
+                        >
+                            Sign In
                     </Button>
-                    <Grid container>
-                        <Grid item xs>
-                            <Link href="#" variant="body2">
-                                Forgot password?
+                        <Grid container>
+                            <Grid item xs>
+                                <Link href="#" variant="body2">
+                                    Forgot password?
                             </Link>
+                            </Grid>
+                            <Grid item>
+                                <Link to="/Signup" variant="body2">
+                                    {"Don't have an account? Sign Up"}
+                                </Link>
+                            </Grid>
                         </Grid>
-                        <Grid item>
-                            <Link to="/Signup" variant="body2">
-                                {"Don't have an account? Sign Up"}
-                            </Link>
-                        </Grid>
-                    </Grid>
-                </form>
-            </div>
-            <Box mt={8}>
-            </Box>
+                    </form>
+                </div>
+                <Box mt={8}>
+                </Box>
 
 
-        </Container>
-        : <CustomCircularProgress />
-
+            </Container>
+        </div>
     );
 }

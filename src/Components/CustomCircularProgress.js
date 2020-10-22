@@ -25,23 +25,11 @@ const useStyles = makeStyles((theme: Theme) =>
 export default function CustomCircularProgress() {
     const classes = useStyles();
 
-
-
-
-
-
-
-
-
     return (
         <div className={classes.root}>
             <div className={classes.placeholder}>
-
                 <CircularProgress />
-
             </div>
-
-
         </div>
     );
 }

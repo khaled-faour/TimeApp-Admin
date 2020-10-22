@@ -1,11 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import Link from '@material-ui/core/Link';
 import { makeStyles } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
+import { DataGrid } from '@material-ui/data-grid';
 import { Link as RouterLink, useLocation } from 'react-router-dom'
 import 'firebase/functions';
 import { useFirebaseApp } from 'reactfire';
@@ -17,104 +12,59 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-const Users = ({ numberOfUsers = null }) => {
+const Users = ({ numberOfUsers = 10 }) => {
+
+
+    const columns = [
+        { field: 'id', headerName: 'ID', width: 200 },
+        { field: 'displayName', headerName: 'Display Name', width: 200 },
+        { field: 'email', headerName: 'Email', width: 200 },
+        { field: 'creationTime', headerName: 'Creation Date', width: 200 },
+        { field: 'lastSignInTime', headerName: 'Last sign in', width: 200 },
+    ];
+
     const classes = useStyles();
     const location = useLocation();
     const [usersList, setUsersList] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [selection, setSelection] = useState([]);
     const firebase = useFirebaseApp();
 
 
-
-
-
-    useEffect(() => {
-        const fetchUsers = async () => {
-            try {
-                await firebase.functions().httpsCallable('getAllUsers')()
-                    .then(async response => {
-                        await setUsersList(response.data);
-                    }).catch(e => {
-                        console.log(e)
-                    });
-            } catch (e) {
-                console.log(e);
-            }
-        };
-        const firefunction = async () => {
-
-            try {
-                await firebase.functions().httpsCallable('getAllCategories')()
-                    .then(response => {
-                        console.log(response.data);
-                    }).catch(e => {
-                        console.log(e)
-                    });
-            } catch (e) {
-                console.log(e);
-            }
-
+    const fetchUsers = async () => {
+        try {
+            await firebase.functions().httpsCallable('getAllUsers')()
+                .then(response => {
+                    setIsLoading(false)
+                }).catch(e => {
+                    console.log(e)
+                });
+        } catch (e) {
+            console.log(e);
         }
-
+    };
+    useEffect(() => {
         fetchUsers();
-        firefunction();
     }, [firebase]);
-
-
-
-
-
-
-
-
 
 
     return (
         <React.Fragment>
-            {numberOfUsers === null ?
-                <h3>All Users</h3> :
-                <h3>Last {numberOfUsers} Users</h3>
-            }
-            <Table size="small">
-                <TableHead>
-                    <TableRow>
-                        <TableCell>Name</TableCell>
-                        <TableCell>Email</TableCell>
-                        <TableCell>Last Sign In</TableCell>
-                        <TableCell>Created</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {usersList.length === 0 ?
-
-                        <TableRow>
-                            <TableCell key="CircularProgress">
-                                <p>Loading users list...</p>
-                            </TableCell>
-                        </TableRow>
-                        : usersList.slice(
-                            Math.max(
-                                usersList.length - (numberOfUsers == null ? usersList.length : numberOfUsers), 0
-                            )
-                        )
-                            .map(user => (
-                                <TableRow key={user.uid}>
-                                    <TableCell>{user.displayName}</TableCell>
-                                    <TableCell>{user.email}</TableCell>
-                                    <TableCell>{user.metadata.lastSignInTime}</TableCell>
-                                    <TableCell>{user.metadata.creationTime}</TableCell>
-                                </TableRow>
-                            ))}
-                </TableBody>
-            </Table>
-            <div className={classes.seeMore}>
-                {location.pathname === "/dashboard/users" ?
-                    null :
-                    <Link color="primary" component={RouterLink} to="/dashboard/users" >
-                        More...
-                    </Link>
-                }
-
+            <h3>Users</h3>
+            <div style={{ height: 400, width: '100%' }}>
+                <DataGrid
+                    autoHeight
+                    disableSelectionOnClick
+                    rows={usersList}
+                    columns={columns}
+                    pageSize={numberOfUsers}
+                    loading={isLoading}
+                    onSelectionChange={(newSelection) => {
+                        setSelection(newSelection.rows)
+                    }} />
             </div>
+
+
         </React.Fragment >
     );
 }

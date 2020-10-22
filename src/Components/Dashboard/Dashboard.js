@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -17,12 +17,19 @@ import Paper from '@material-ui/core/Paper';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
-import { mainListItems } from './listItems';
+import { MainListItems } from './listItems';
 import Logout from '../Authentication/Logout';
 import Users from './Users';
 import { Route, Switch } from 'react-router-dom';
 import Categories from './Categories';
 import Tasks from './Tasks'
+import Chart from './Chart'
+import AddCategory from './AddCategory';
+import EditCategory from './EditCategory';
+import AddTask from './AddTask'
+import EditTask from './EditTask'
+import Notifications from './Notifications'
+import { useHistory } from 'react-router-dom'
 
 
 
@@ -109,7 +116,8 @@ const useStyles = makeStyles((theme) => ({
 
 const Dashboard = () => {
     const classes = useStyles();
-    const [open, setOpen] = React.useState(false);
+    const history = useHistory();
+    const [open, setOpen] = useState(false);
 
     const handleDrawer = () => {
         setOpen(!open);
@@ -133,8 +141,8 @@ const Dashboard = () => {
                         TimeApp Admin Dashboard
                     </Typography>
 
-                    <IconButton color="inherit">
-                        <Badge badgeContent={4} color="secondary">
+                    <IconButton color="inherit" onClick={() => history.push('/dashboard/Notifications')}>
+                        <Badge variant="dot" color="secondary">
                             <NotificationsIcon />
                         </Badge>
                     </IconButton>
@@ -153,7 +161,9 @@ const Dashboard = () => {
                     </IconButton>
                 </div>
                 <Divider />
-                <List>{mainListItems}</List>
+                <List>
+                    <MainListItems />
+                </List>
                 <Divider />
                 <List>
                     <Logout />
@@ -166,14 +176,27 @@ const Dashboard = () => {
                     <Grid container spacing={3}>
                         <Switch>
                             <Route exact path="/dashboard">
+                                <Grid item xs={12}>
+                                    <Paper className={classes.paper}>
+                                        <Notifications numberOfNotifications={5} />
+                                    </Paper>
+                                </Grid>
                                 {/* List Number of Users*/}
                                 <Grid item xs={12}>
                                     <Paper className={classes.paper}>
-                                        <Users numberOfUsers={2} />
+                                        <Users numberOfUsers={5} />
                                     </Paper>
                                 </Grid>
                             </Route>
-                            <Route path="/dashboard/users">
+                            <Route exact path="/dashboard/Notifications">
+                                {/* List All Notifications*/}
+                                <Grid item xs={12}>
+                                    <Paper className={classes.paper}>
+                                        <Notifications />
+                                    </Paper>
+                                </Grid>
+                            </Route>
+                            <Route exact path="/dashboard/users">
                                 {/* List  All Users*/}
                                 <Grid item xs={12}>
                                     <Paper className={classes.paper}>
@@ -181,7 +204,7 @@ const Dashboard = () => {
                                     </Paper>
                                 </Grid>
                             </Route>
-                            <Route path="/dashboard/categories">
+                            <Route exact path="/dashboard/categories">
                                 {/* List Categories */}
                                 <Grid item xs={12}>
                                     <Paper className={classes.paper}>
@@ -189,7 +212,9 @@ const Dashboard = () => {
                                     </Paper>
                                 </Grid>
                             </Route>
-                            <Route path="/dashboard/tasks">
+
+
+                            <Route exact path="/dashboard/Category/:categoryName/:categoryId">
                                 {/* List Tasks*/}
                                 <Grid item xs={12}>
                                     <Paper className={classes.paper}>
@@ -198,9 +223,52 @@ const Dashboard = () => {
                                 </Grid>
                             </Route>
 
+                            <Route exact path="/dashboard/Category/Add">
+                                {/* Add Category*/}
+                                <Grid item xs={12}>
+                                    <Paper className={classes.paper}>
+                                        <AddCategory />
+                                    </Paper>
+                                </Grid>
+                            </Route>
+
+                            <Route exact path="/dashboard/Category/:categoryName/:categoryId/Edit">
+                                {/* Edit Category*/}
+                                <Grid item xs={12}>
+                                    <Paper className={classes.paper}>
+                                        <EditCategory />
+                                    </Paper>
+                                </Grid>
+                            </Route>
+
+                            <Route exact path="/dashboard/Category/:categoryName/:categoryId/Task/Add">
+                                {/* Add Task*/}
+                                <Grid item xs={12}>
+                                    <Paper className={classes.paper}>
+                                        <AddTask />
+                                    </Paper>
+                                </Grid>
+                            </Route>
+                            <Route exact path="/dashboard/Category/:categoryName/:categoryId/Task/:taskId/Edit">
+                                {/* Edit Task*/}
+                                <Grid item xs={12}>
+                                    <Paper className={classes.paper}>
+                                        <EditTask />
+                                    </Paper>
+                                </Grid>
+                            </Route>
+
+
+
 
                         </Switch>
                     </Grid>
+                    {/*Chart */}
+                    {/* <Grid item xs={12}>
+                        <Paper className={classes.paper}>
+                            <Chart />
+                        </Paper>
+                    </Grid> */}
                     <Box pt={4}>
                     </Box>
                 </Container>

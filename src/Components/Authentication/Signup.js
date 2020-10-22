@@ -11,7 +11,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { useFirebaseApp } from 'reactfire';
-import { CircularProgress } from '@material-ui/core';
+import LinearProgress from '@material-ui/core/LinearProgress'
 
 
 
@@ -64,105 +64,107 @@ export default function SignUp() {
     const handleSubmit = e => {
         e.preventDefault();
 
-    //setLoading to true
-    setLoading(true);
-    // Sign up code here.
-    firebase.auth().createUserWithEmailAndPassword(user.email, user.password)
-        .then(result => {
-            // Update the nickname
-            result.user.updateProfile({
-                displayName: user.fullname,
-            });
-            setLoading(false);
+        //setLoading to true
+        setLoading(true);
+        // Sign up code here.
+        firebase.auth().createUserWithEmailAndPassword(user.email, user.password)
+            .then(result => {
+                // Update the nickname
+                result.user.updateProfile({
+                    displayName: user.fullname,
+                });
+                setLoading(false);
 
 
 
 
-            // Sign Out the user.
-            firebase.auth().signOut();
-        }).catch(error => {
-            // Update the error
-            setUser({
-                ...user,
-                error: error.message,
+                // Sign Out the user.
+                firebase.auth().signOut();
+            }).catch(error => {
+                // Update the error
+                setUser({
+                    ...user,
+                    error: error.message,
+                })
             })
-        })
-}
+    }
 
-return (!loading ?
-    <Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <div className={classes.paper}>
-            <Avatar className={classes.avatar}>
-                <LockOutlinedIcon />
-            </Avatar>
-            <Typography component="h1" variant="h5">
-                Sign up
+    return (
+        <div>
+            {loading ? <LinearProgress /> : null}
+            <Container component="main" maxWidth="xs">
+                <CssBaseline />
+                <div className={classes.paper}>
+                    <Avatar className={classes.avatar}>
+                        <LockOutlinedIcon />
+                    </Avatar>
+                    <Typography component="h1" variant="h5">
+                        Sign up
                 </Typography>
-            <form onSubmit={handleSubmit} className={classes.form} >
-                <Grid container spacing={2}>
-                    <Grid item xs={12}>
-                        <TextField
-                            autoComplete="fullname"
-                            name="fullname"
-                            variant="outlined"
-                            required
-                            fullWidth
-                            id="fullname"
-                            label="Full Name"
-                            autoFocus
-                            onChange={handleChange}
-                        />
-                    </Grid>
+                    <form onSubmit={handleSubmit} className={classes.form} >
+                        <Grid container spacing={2}>
+                            <Grid item xs={12}>
+                                <TextField
+                                    autoComplete="fullname"
+                                    name="fullname"
+                                    variant="outlined"
+                                    required
+                                    fullWidth
+                                    id="fullname"
+                                    label="Full Name"
+                                    autoFocus
+                                    onChange={handleChange}
+                                />
+                            </Grid>
 
-                    <Grid item xs={12}>
-                        <TextField
-                            variant="outlined"
-                            required
-                            fullWidth
-                            id="email"
-                            label="Email Address"
-                            name="email"
-                            autoComplete="email"
-                            onChange={handleChange}
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <TextField
-                            variant="outlined"
-                            required
-                            fullWidth
-                            name="password"
-                            label="Password"
-                            type="password"
-                            id="password"
-                            autoComplete="current-password"
-                            onChange={handleChange}
-                        />
-                    </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    variant="outlined"
+                                    required
+                                    fullWidth
+                                    id="email"
+                                    label="Email Address"
+                                    name="email"
+                                    autoComplete="email"
+                                    onChange={handleChange}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    variant="outlined"
+                                    required
+                                    fullWidth
+                                    name="password"
+                                    label="Password"
+                                    type="password"
+                                    id="password"
+                                    autoComplete="current-password"
+                                    onChange={handleChange}
+                                />
+                            </Grid>
 
-                </Grid>
-                <Button
-                    type="submit"
-                    fullWidth
-                    variant="contained"
-                    color="primary"
-                    className={classes.submit}
-                >
-                    Sign Up
+                        </Grid>
+                        <Button
+                            type="submit"
+                            fullWidth
+                            variant="contained"
+                            color="primary"
+                            className={classes.submit}
+                        >
+                            Sign Up
                     </Button>
-                <Grid container justify="flex-end">
-                    <Grid item>
-                        <Link to="/" variant="body2">
-                            Already have an account? Sign in
+                        <Grid container justify="flex-end">
+                            <Grid item>
+                                <Link to="/" variant="body2">
+                                    Already have an account? Sign in
                             </Link>
-                    </Grid>
-                </Grid>
-            </form>
+                            </Grid>
+                        </Grid>
+                    </form>
+                </div>
+                <Box mt={5}>
+                </Box>
+            </Container>
         </div>
-        <Box mt={5}>
-        </Box>
-    </Container>
-    : <CircularProgress />
-);
+    );
 }
