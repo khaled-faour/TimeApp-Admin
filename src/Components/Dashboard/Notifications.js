@@ -12,7 +12,6 @@ const Notifications = ({ numberOfNotifications = 100 }) => {
     const [notificationsList, setNotificationsList] = useState([]);
 
     const getNotifications = async () => {
-
         try {
             await firebase.functions().httpsCallable('getNotifications')({ numberOfNotifications: numberOfNotifications })
                 .then(response => {
@@ -27,7 +26,7 @@ const Notifications = ({ numberOfNotifications = 100 }) => {
 
     useEffect(() => {
         getNotifications();
-    })
+    }, [numberOfNotifications])
 
     return (
         <React.Fragment>

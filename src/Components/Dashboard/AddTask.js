@@ -40,9 +40,6 @@ const AddCategory = () => {
         }
     }
 
-    useEffect(() => {
-    }, [taskName, taskDescription])
-
     return (
         <React.Fragment>
             {isLoading ? <LinearProgress /> : null}

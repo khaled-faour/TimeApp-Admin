@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { DataGrid } from '@material-ui/data-grid';
-import { Link as RouterLink, useLocation } from 'react-router-dom'
 import 'firebase/functions';
 import { useFirebaseApp } from 'reactfire';
 
@@ -23,8 +22,7 @@ const Users = ({ numberOfUsers = 10 }) => {
         { field: 'lastSignInTime', headerName: 'Last sign in', width: 200 },
     ];
 
-    const classes = useStyles();
-    const location = useLocation();
+
     const [usersList, setUsersList] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [selection, setSelection] = useState([]);
@@ -35,6 +33,7 @@ const Users = ({ numberOfUsers = 10 }) => {
         try {
             await firebase.functions().httpsCallable('getAllUsers')()
                 .then(response => {
+                    setUsersList(response.data)
                     setIsLoading(false)
                 }).catch(e => {
                     console.log(e)

@@ -37,8 +37,6 @@ const AddCategory = () => {
         }
     }
 
-    useEffect(() => {
-    }, [categoryName])
 
     return (
         <React.Fragment>

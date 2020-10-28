@@ -5,7 +5,6 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import PeopleIcon from '@material-ui/icons/People';
-import AssignmentIcon from '@material-ui/icons/Assignment';
 import CategoryIcon from '@material-ui/icons/Category';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
@@ -110,14 +109,6 @@ export const MainListItems = () => {
 
                 </List>
             </Collapse>
-
-            <ListItem button component={Link} to="/dashboard/tasks">
-                <ListItemIcon>
-                    <AssignmentIcon />
-                </ListItemIcon>
-                <ListItemText primary="Tasks" />
-            </ListItem>
-
         </div >
     )
 };

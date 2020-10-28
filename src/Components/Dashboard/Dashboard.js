@@ -187,6 +187,12 @@ const Dashboard = () => {
                                         <Users numberOfUsers={5} />
                                     </Paper>
                                 </Grid>
+                                {/* Chart*/}
+                                <Grid item xs={12}>
+                                    <Paper className={classes.paper}>
+                                        <Chart />
+                                    </Paper>
+                                </Grid>
                             </Route>
                             <Route exact path="/dashboard/Notifications">
                                 {/* List All Notifications*/}
