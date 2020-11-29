@@ -5,6 +5,8 @@ import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
 import SignIn from './Components/Authentication/Signin';
 import Dashboard from './Components/Dashboard/Dashboard'
 import CustomCircularProgress from './Components/CustomCircularProgress'
+import Model from './Components/model'
+
 // 
 
 function App() {
@@ -36,6 +38,12 @@ function App() {
               <Dashboard />
             </AuthCheck>
           </Route>
+
+          <Route exact path="/model">
+            {/* Model*/}
+            <Model />
+          </Route>
+
 
 
 
