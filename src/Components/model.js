@@ -2,6 +2,10 @@ import React, { useEffect } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
+import { OBJLoader2 } from 'three/examples/jsm/loaders/OBJLoader2'
+import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader'
+import { MTLLoader } from 'three/examples/jsm/loaders/MTLLoader'
+import { MtlObjBridge } from 'three/examples/jsm/loaders/obj2/bridge/MtlObjBridge'
 import * as firebase from "firebase";
 
 
@@ -41,12 +45,14 @@ document.body.appendChild(renderer.domElement)
 
 //Camera
 const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
-camera.position.set(0, 5, 0)
+camera.position.set(0, 20, 20)
+camera.lookAt(scene.position)
+
 
 //controls
 const controls = new OrbitControls(camera, renderer.domElement);
 
-var arrowHelper = new THREE.ArrowHelper(new THREE.Vector3(), new THREE.Vector3(), .25, 0xffff00);
+var arrowHelper = new THREE.ArrowHelper(new THREE.Vector3(), new THREE.Vector3(), 1, 0xffff00);
 scene.add(arrowHelper);
 const material = new THREE.MeshNormalMaterial();
 const ringGeometry = new THREE.RingGeometry(0.1, 0.2, 32);
@@ -60,31 +66,44 @@ scene.add(light);
 
 
 
+
+//Axes Helper
+const axesHelper = new THREE.AxesHelper(20);
+scene.add(axesHelper);
+
 //Loader
-const loader = new GLTFLoader()
-loader.load("/models/scene.gltf", (gltf) => {
-    gltf.scene.traverse((child) => {
-        if (child.isMesh) {
-            let m = child;
-            m.receiveShadow = true;
-            m.castShadow = true;
-            m.material.flatShading = true;
-            sceneMeshes.push(m);
-        }
-        if (child.isLight) {
-            let l = child;
-            l.castShadow = true;
-            l.shadow.bias = -0.003;
-            l.shadow.mapSize.width = 2048;
-            l.shadow.mapSize.height = 2048;
-        }
-    });
-    scene.add(gltf.scene);
-}, (xhr) => {
-    console.log((xhr.loaded / xhr.total * 100) + '% loaded');
-}, (error) => {
-    console.log('An error happened:', error);
+
+const mtlLoader = new MTLLoader()
+mtlLoader.load("/models/Room/interior.mtl", (materials) => {
+    materials.preload()
+
+    const loader = new OBJLoader()
+
+    loader.setMaterials(materials)
+    loader.load("/models/Room/interior.obj", (model) => {
+        model.traverse((child) => {
+            if (child.isMesh) {
+                let m = child;
+                m.receiveShadow = true;
+                m.castShadow = true;
+                m.material.flatShading = true;
+                sceneMeshes.push(m);
+            }
+            if (child.isLight) {
+                let l = child;
+                l.castShadow = true;
+                l.shadow.bias = -0.003;
+                l.shadow.mapSize.width = 2048;
+                l.shadow.mapSize.height = 2048;
+            }
+        });
+        model.scale.set(0.05, 0.05, 0.05)
+
+        model.castShadow = true
+        scene.add(model);
+    })
 })
+
 
 
 //Get markers
